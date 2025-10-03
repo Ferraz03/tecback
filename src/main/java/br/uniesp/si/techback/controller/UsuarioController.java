@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -18,37 +19,32 @@ public class UsuarioController {
     @Autowired
     private UsuarioService service;
 
-    // Endpoint para CRIAR um novo usuário
     @PostMapping
     public ResponseEntity<Usuario> criarUsuario(@RequestBody Usuario usuario) {
         Usuario novoUsuario = service.criar(usuario);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario);
     }
 
-    // Endpoint para LISTAR TODOS os usuários
     @GetMapping
     public ResponseEntity<List<Usuario>> listarTodosOsUsuarios() {
         List<Usuario> usuarios = service.listarTodos();
         return ResponseEntity.ok(usuarios);
     }
 
-    // Endpoint para BUSCAR UM usuário pelo ID
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> buscarUsuarioPorId(@PathVariable Long id) {
+    public ResponseEntity<Usuario> buscarUsuarioPorId(@PathVariable UUID id) {
         Usuario usuario = service.buscarPorId(id);
         return ResponseEntity.ok(usuario);
     }
 
-    // Endpoint para ATUALIZAR um usuário existente
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> atualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuarioAtualizado) {
+    public ResponseEntity<Usuario> atualizarUsuario(@PathVariable UUID id, @RequestBody Usuario usuarioAtualizado) {
         Usuario usuario = service.atualizar(id, usuarioAtualizado);
         return ResponseEntity.ok(usuario);
     }
 
-    // Endpoint para DELETAR um usuário
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarUsuario(@PathVariable Long id) {
+    public ResponseEntity<Void> deletarUsuario(@PathVariable UUID id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();
     }
