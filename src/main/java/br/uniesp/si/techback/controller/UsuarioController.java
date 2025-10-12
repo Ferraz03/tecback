@@ -1,14 +1,18 @@
 package br.uniesp.si.techback.controller;
 
+import br.uniesp.si.techback.exception.ConflitoDeDadosException;
+import br.uniesp.si.techback.exception.EntidadeNaoEncontradaException;
 import br.uniesp.si.techback.model.Usuario;
 import br.uniesp.si.techback.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import org.springframework.data.domain.Pageable;
+
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -16,36 +20,52 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UsuarioController {
 
-    @Autowired
-    private UsuarioService service;
+    private final UsuarioService conteudoService;
 
     @PostMapping
     public ResponseEntity<Usuario> criarUsuario(@RequestBody Usuario usuario) {
-        Usuario novoUsuario = service.criar(usuario);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario);
+        try {
+            Usuario novoUsuario = conteudoService.criar(usuario);
+            return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario);
+        } catch (ConflitoDeDadosException erro) {
+            Map<String, String> errado = Map.of("erro", erro.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body((Usuario) errado);
+        }
     }
 
     @GetMapping
-    public ResponseEntity<List<Usuario>> listarTodosOsUsuarios() {
-        List<Usuario> usuarios = service.listarTodos();
+    public ResponseEntity<Page<Usuario>> listarTodosOsUsuarios(Pageable pageable) {
+        Page<Usuario> usuarios = conteudoService.listarPaginado(pageable);
         return ResponseEntity.ok(usuarios);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> buscarUsuarioPorId(@PathVariable UUID id) {
-        Usuario usuario = service.buscarPorId(id);
-        return ResponseEntity.ok(usuario);
+        try {
+            Usuario usuario = conteudoService.buscarPorId(id);
+            return ResponseEntity.ok(usuario);
+        } catch (EntidadeNaoEncontradaException erro) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Usuario> atualizarUsuario(@PathVariable UUID id, @RequestBody Usuario usuarioAtualizado) {
-        Usuario usuario = service.atualizar(id, usuarioAtualizado);
-        return ResponseEntity.ok(usuario);
+        try {
+            Usuario usuario = conteudoService.atualizar(id, usuarioAtualizado);
+            return ResponseEntity.ok(usuario);
+        } catch (EntidadeNaoEncontradaException erro) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarUsuario(@PathVariable UUID id) {
-        service.deletar(id);
-        return ResponseEntity.noContent().build();
+        try {
+            conteudoService.deletar(id);
+            return ResponseEntity.noContent().build();
+        } catch (EntidadeNaoEncontradaException erro){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 }
