@@ -1,6 +1,7 @@
 package br.uniesp.si.techback.repository;
 
 import br.uniesp.si.techback.model.Conteudo;
+import br.uniesp.si.techback.model.Genero;
 import br.uniesp.si.techback.model.Tipo;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -10,7 +11,7 @@ import jakarta.persistence.criteria.Predicate;
 
 public class ConteudoSpecification {
 
-    public static Specification<Conteudo> comFiltros(Tipo tipo, String genero) {
+    public static Specification<Conteudo> comFiltros(Tipo tipo, Genero genero) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -18,8 +19,8 @@ public class ConteudoSpecification {
                 predicates.add(criteriaBuilder.equal(root.get("tipo"), tipo));
             }
 
-            if (genero != null && !genero.isBlank()) {
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("genero")), "%" + genero.toLowerCase() + "%"));
+            if (genero != null) {
+                predicates.add(criteriaBuilder.equal(root.get("genero"), genero));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

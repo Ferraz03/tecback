@@ -4,6 +4,7 @@ package br.uniesp.si.techback.controller;
 import br.uniesp.si.techback.exception.ConflitoDeDadosException;
 import br.uniesp.si.techback.exception.EntidadeNaoEncontradaException;
 import br.uniesp.si.techback.model.Conteudo;
+import br.uniesp.si.techback.model.Genero;
 import br.uniesp.si.techback.model.Tipo;
 import br.uniesp.si.techback.service.ConteudoService;
 import jakarta.validation.Valid;
@@ -26,7 +27,7 @@ public class ConteudoController {
     @GetMapping
     public ResponseEntity<Page<Conteudo>> listarConteudos(
             @RequestParam(required = false) Tipo tipo,
-            @RequestParam(required = false) String genero,
+            @RequestParam(required = false) Genero genero,
             Pageable pageable) {
         Page<Conteudo> conteudos = conteudoService.listarFiltradoEPaginado(tipo, genero, pageable);
         return ResponseEntity.ok(conteudos);

@@ -3,6 +3,7 @@ package br.uniesp.si.techback.service;
 import br.uniesp.si.techback.exception.ConflitoDeDadosException;
 import br.uniesp.si.techback.exception.EntidadeNaoEncontradaException;
 import br.uniesp.si.techback.model.Conteudo;
+import br.uniesp.si.techback.model.Genero;
 import br.uniesp.si.techback.model.Tipo;
 import br.uniesp.si.techback.model.Usuario;
 import br.uniesp.si.techback.repository.ConteudoRepository;
@@ -22,7 +23,7 @@ public class ConteudoService {
 
     private final ConteudoRepository conteudoRepository;
 
-    public Page<Conteudo> listarFiltradoEPaginado(Tipo tipo, String genero, Pageable pageable) {
+    public Page<Conteudo> listarFiltradoEPaginado(Tipo tipo, Genero genero, Pageable pageable) {
         Specification<Conteudo> spec = ConteudoSpecification.comFiltros(tipo, genero);
 
         return conteudoRepository.findAll(spec, pageable);
