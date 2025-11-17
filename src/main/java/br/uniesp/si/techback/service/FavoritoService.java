@@ -36,7 +36,6 @@ public class FavoritoService {
         }
 
         Favorito favorito = new Favorito();
-        favorito.setId(favoritoId);
         favorito.setUsuario(usuario);
         favorito.setConteudo(conteudo);
 

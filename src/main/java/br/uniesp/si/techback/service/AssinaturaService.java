@@ -10,6 +10,8 @@ import br.uniesp.si.techback.repository.AssinaturaRepository;
 import br.uniesp.si.techback.repository.PlanoRepository;
 import br.uniesp.si.techback.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -59,5 +61,9 @@ public class AssinaturaService {
 
     public List<Assinatura> listarPorStatus(StatusAssinatura status) {
         return assinaturaRepository.findByStatus(status);
+    }
+
+    public Page<Assinatura> listarPaginado(Pageable pageable) {
+        return assinaturaRepository.findAll(pageable);
     }
 }

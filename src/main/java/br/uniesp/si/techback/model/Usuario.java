@@ -1,5 +1,6 @@
 package br.uniesp.si.techback.model;
 
+import br.uniesp.si.techback.validator.CPFouCNPJ;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,6 +37,7 @@ public class Usuario {
     @Column(name = "senha_hash", length = 60, nullable = false)
     private String senhaHash;
 
+    @CPFouCNPJ
     @Column(name = "cpf_cnpj", length = 14, unique = true)
     private String cpfCnpj;
 

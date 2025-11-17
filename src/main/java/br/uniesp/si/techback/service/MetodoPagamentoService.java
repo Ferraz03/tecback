@@ -1,5 +1,6 @@
 package br.uniesp.si.techback.service;
 
+import br.uniesp.si.techback.controller.MetodoPagamentoController;
 import br.uniesp.si.techback.exception.EntidadeNaoEncontradaException;
 import br.uniesp.si.techback.model.MetodoPagamento;
 import br.uniesp.si.techback.model.Usuario;
@@ -19,12 +20,22 @@ public class MetodoPagamentoService {
     private final MetodoPagamentoRepository metodoPagamentoRepository;
     private final UsuarioRepository usuarioRepository;
 
-    public MetodoPagamento criar(UUID usuarioId, MetodoPagamento metodoPagamento) {
+    public MetodoPagamento criar(UUID usuarioId, MetodoPagamentoController.MetodoPagamentoRequest request) {
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Usuário não encontrado."));
 
-        metodoPagamento.setUsuario(usuario);
-        return metodoPagamentoRepository.save(metodoPagamento);
+        MetodoPagamento novoMetodo = new MetodoPagamento();
+        novoMetodo.setBandeira(request.getBandeira());
+        novoMetodo.setUltimos4(request.getUltimos4());
+        novoMetodo.setMesExp(request.getMesExp());
+        novoMetodo.setAnoExp(request.getAnoExp());
+        novoMetodo.setNomePortador(request.getNomePortador());
+        novoMetodo.setTokenGateway(request.getTokenGateway());
+
+        // Associa ao usuário correto
+        novoMetodo.setUsuario(usuario);
+
+        return metodoPagamentoRepository.save(novoMetodo);
     }
 
     public List<MetodoPagamento> listarPorUsuario(UUID usuarioId) {
