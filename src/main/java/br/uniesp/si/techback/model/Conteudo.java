@@ -66,6 +66,7 @@ public class Conteudo {
 
     @NotBlank(message = "O gênero não pode ser vazio se for preenchido.")
     @Size(max = 50, message = "O gênero não pode exceder 50 caracteres.")
+    @Enumerated(EnumType.STRING)
     @Column(name = "genero", length = 50)
     private Genero genero;
 

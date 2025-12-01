@@ -21,7 +21,7 @@ public interface ConteudoRepository extends JpaRepository<Conteudo, UUID> , JpaS
     @Query("SELECT c FROM Conteudo c ORDER BY c.titulo ASC")
     List<Conteudo> listarOrdenadoPorTitulo();
 
-    List<Conteudo> findByGeneroIgnoreCaseOrderByTituloAsc(Genero genero);
+    List<Conteudo> findByGeneroOrderByTituloAsc(Genero genero);
 
     @Query("SELECT c FROM Conteudo c ORDER BY c.relevancia DESC")
     List<Conteudo> findTopByRelevancia(Pageable pageable);

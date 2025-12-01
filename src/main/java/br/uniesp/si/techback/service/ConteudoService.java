@@ -88,7 +88,7 @@ public class ConteudoService {
     }
 
     public List<Conteudo> buscarPorGeneroOrdenado(Genero genero) {
-        return conteudoRepository.findByGeneroIgnoreCaseOrderByTituloAsc(genero);
+        return conteudoRepository.findByGeneroOrderByTituloAsc(genero);
     }
 
     public List<Conteudo> buscarTopNConteudos(int n) {
