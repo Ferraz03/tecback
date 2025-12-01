@@ -12,10 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/conteudos") // <-- REFINAMENTO 2: Rota versionada
+@RequestMapping("/api/v1/conteudos")
 @RequiredArgsConstructor
 public class ConteudoController {
 
@@ -55,5 +56,24 @@ public class ConteudoController {
     public ResponseEntity<Void> deletarConteudo(@PathVariable UUID id) {
         conteudoService.deletar(id);
         return ResponseEntity.noContent().build();
+    }
+
+
+    @GetMapping("/top")
+    public ResponseEntity<List<Conteudo>> topConteudos(@RequestParam(defaultValue = "5") int n) {
+        List<Conteudo> conteudos = conteudoService.buscarTopNConteudos(n);
+        return ResponseEntity.ok(conteudos);
+    }
+
+    @GetMapping("/apos-ano/{ano}")
+    public ResponseEntity<List<Conteudo>> conteudosAposAno(@PathVariable Integer ano) {
+        List<Conteudo> conteudos = conteudoService.buscarConteudosLancadosDepoisDe(ano);
+        return ResponseEntity.ok(conteudos);
+    }
+
+    @GetMapping("/com-trailer")
+    public ResponseEntity<List<Conteudo>> conteudosComTrailer() {
+        List<Conteudo> conteudos = conteudoService.buscarConteudosComTrailer();
+        return ResponseEntity.ok(conteudos);
     }
 }

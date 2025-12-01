@@ -10,10 +10,12 @@ import br.uniesp.si.techback.repository.ConteudoRepository;
 import br.uniesp.si.techback.repository.ConteudoSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -79,5 +81,31 @@ public class ConteudoService {
             throw new EntidadeNaoEncontradaException("Conteúdo com ID" + id + " não encontrado");
         }
         conteudoRepository.deleteById(id);
+    }
+
+    public List<Conteudo> listarOrdenadoPorTitulo() {
+        return conteudoRepository.listarOrdenadoPorTitulo();
+    }
+
+    public List<Conteudo> buscarPorGeneroOrdenado(Genero genero) {
+        return conteudoRepository.findByGeneroIgnoreCaseOrderByTituloAsc(genero);
+    }
+
+    public List<Conteudo> buscarTopNConteudos(int n) {
+        // Cria um objeto Pageable para buscar apenas os 'n' primeiros resultados.
+        Pageable pageable = PageRequest.of(0, n);
+        return conteudoRepository.findTopByRelevancia(pageable);
+    }
+
+    public List<Conteudo> buscarConteudosLancadosDepoisDe(Integer ano) {
+        return conteudoRepository.findConteudosLancadosDepoisDe(ano);
+    }
+
+    public List<Conteudo> buscarConteudosComTrailer() {
+        return conteudoRepository.findConteudosComTrailer();
+    }
+
+    public List<Conteudo> buscarPorPalavraChave(String palavra) {
+        return conteudoRepository.buscarPorPalavraChave(palavra);
     }
 }
